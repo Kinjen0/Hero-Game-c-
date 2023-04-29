@@ -4,6 +4,9 @@
 * https://stackoverflow.com/questions/14505571/centering-text-on-the-screen-with-sfml
 * //Player spritesheet came from this source although I did modify it a little to make it easier for me to animate
 //https://totuslotus.itch.io/characterpack
+* the slime spritesheets came from
+* https://game-endeavor.itch.io/mystic-woods
+
 * 
 * 
 * 
