@@ -22,6 +22,7 @@
 #include "enemy.h"
 #include "blueslime.h"
 #include "redslime.h"
+#include "attack.h"
 using namespace std;	
 
 //view size
@@ -50,8 +51,15 @@ sf::RectangleShape blackRectangle(sf::Vector2f(viewWidth, viewHeight));
 //text for the trees health
 sf::Text treeHealthText;
 
-// Boolean to check if the tree has been destroyed.
+// vector to store the players current position
+sf::Vector2f playerPosition;
 
+//store the players current direction
+sf::Vector2f playerDirection;
+
+// Variables to manage the attack cooldowns
+bool canAttack = true;
+sf::Clock attackClock;
 
 
 
@@ -113,7 +121,8 @@ void init()
 
 	//set the tree health
 	treeHealthText.setFont(font);
-	
+
+
 
 }
 // Function to create the tilemap
@@ -181,14 +190,22 @@ void spawnRandomEnemy(vector<unique_ptr<Enemy>>& enemies, const sf::Vector2f& tr
 	}
 }
 
+void createAttack(std::vector<unique_ptr<Attack>>& attacks, sf::Vector2f playerPosition, sf::Vector2f playerDirection) {
+	// Get the player's position and speed
+	float attackSpeed = 1000.f;
 
-
+	// Create a new attack
+	Attack newAttack(playerPosition.x, playerPosition.y, attackSpeed, playerDirection, "Graphics/attack.png");
+	attacks.push_back(make_unique<Attack>(playerPosition.x, playerPosition.y, attackSpeed, playerDirection, "Graphics/attack.png"));
+}
 
 
 int main() {
-
 	//vector to store enemies
 	vector<unique_ptr<Enemy>> enemies;
+	
+	//vector to store attacks.
+	vector<unique_ptr<Attack>> attacks;
 	//potental vector to allow for multiple trees
 	//vector<unique_ptr<Tree>> trees;
 
@@ -209,6 +226,7 @@ int main() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		init();
 
 		//if statement to display the game over window if the game is lost
 		if (gameOver)
@@ -249,7 +267,6 @@ int main() {
 				sf::sleep(sf::milliseconds(400));
 
 			}
-			init();
 			//i If the game is not paused, keep running the game
 			if (paused != true)
 			{
@@ -272,6 +289,7 @@ int main() {
 					enemy->update(dt, treePos);
 					enemy->drawEnemy(window);
 				}
+
 				// Check collisions between enemies and trees
 	//for(auto enemyCount = enemies.begin(); enemyCount != enemies.end();)
 				for (auto enemyIterator = enemies.begin(); enemyIterator != enemies.end();) {
@@ -302,6 +320,68 @@ int main() {
 					}
 				}
 
+//attack section
+// 				//manage attack cooldown
+				float attackCooldown = 0.2f; // cooldown time using seconds
+				if (!canAttack && attackClock.getElapsedTime().asSeconds() >= attackCooldown)
+				{
+					canAttack = true;
+					attackClock.restart();
+				}
+
+				//if the spacebar is created make an attack
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canAttack) 
+				{
+					sf::Vector2f playerPos = player.getPosition();
+					sf::Vector2f attackDirection = player.getFacingDirection();
+					createAttack(attacks, playerPos, attackDirection);
+					canAttack = false;
+				}
+
+				
+				// Update and draw attacks
+				for (auto& attack : attacks)
+				{
+					attack->update(dt);
+					attack->draw(window);
+				}
+
+
+
+				// manage player attack and its collision with enemies
+				for (auto attackIterator = attacks.begin(); attackIterator != attacks.end();) {
+					bool attackHit = false;
+
+					for (auto enemyIterator = enemies.begin(); enemyIterator != enemies.end();) {
+						bool enemyDestroyed = false;
+
+						if ((*enemyIterator)->getGlobalBounds().intersects((*attackIterator)->attackSprite.getGlobalBounds())) {
+							(*enemyIterator)->takeDamage();
+
+							if ((*enemyIterator)->getHealth() <= 0) {
+								enemyDestroyed = true;
+							}
+
+							attackHit = true;
+						}
+
+						if (enemyDestroyed) {
+							enemyIterator = enemies.erase(enemyIterator);
+						}
+						else {
+							++enemyIterator;
+						}
+					}
+
+					if (attackHit) {
+						attackIterator = attacks.erase(attackIterator);
+					}
+					else {
+						++attackIterator;
+					}
+				}
+
+
 
 
 
@@ -318,6 +398,7 @@ int main() {
 				textRect = pauseText.getLocalBounds();
 				window.draw(blackRectangle);
 				pauseText.setScale(5, 5);
+
 				pauseText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 				pauseText.setPosition(sf::Vector2f(viewWidth / 2.0f, viewHeight / 2.0f));
 

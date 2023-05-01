@@ -9,6 +9,8 @@ public:
 	void setPosition(int x, int y);
 	void update(float dt,const sf::Vector2f& treePos);
 	int getDamage();
+	void takeDamage();
+	int getHealth();
 	//get global bounds
 	sf::FloatRect getGlobalBounds();
 	sf::Texture enemyTexture;

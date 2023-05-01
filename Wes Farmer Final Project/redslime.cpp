@@ -1,7 +1,7 @@
 #include "redslime.h"
 #include <cmath>
 //change speed to 50 next time
-RedSlime::RedSlime(int x, int y) : Enemy(50, x, y, 3,500, "Graphics/slime2.png") {
+RedSlime::RedSlime(int x, int y) : Enemy(1, x, y, 3,500, "Graphics/slime2.png") {
     speed = 2.0f;
     // Set the texture to the blue slime texture rectangle
     enemySprite.setTextureRect(sf::IntRect(8, 12, 16, 12));

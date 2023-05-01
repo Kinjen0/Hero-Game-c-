@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="attack.cpp" />
     <ClCompile Include="blueslime.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="main.cpp" />
@@ -144,6 +145,7 @@
     <Text Include="SourcesOfSprites.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="attack.h" />
     <ClInclude Include="blueslime.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="player.h" />

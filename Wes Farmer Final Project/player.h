@@ -9,7 +9,11 @@ public:
     void draw(sf::RenderWindow& window);
 
     sf::Vector2f getPosition();
+    float getPositionX();
+    float getPositionY();
     void setPosition(float x, float y);
+    sf::Vector2f getFacingDirection();
+
 
     void handleInput();
 
@@ -19,6 +23,13 @@ private:
     sf::Texture playerTexture;
     sf::Sprite playerSprite;
     int playerSpeed;
+
+    //player position storage
+    float x;
+    float y;
+
+    // Variable to store where the player is facing in degrees
+    float faceDirection;
 
     int currentFrame;
     int currentDirection; // 0: down, 1: left, 2: right, 3: up

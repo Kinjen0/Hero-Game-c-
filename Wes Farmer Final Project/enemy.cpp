@@ -46,3 +46,11 @@ int Enemy::getDamage() {
 sf::FloatRect Enemy::getGlobalBounds() {
 	return enemySprite.getGlobalBounds();
 }
+void Enemy::takeDamage()
+{
+    health -= 1;
+}
+int Enemy::getHealth()
+{
+    return health;
+}

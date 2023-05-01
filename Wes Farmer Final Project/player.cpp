@@ -66,6 +66,7 @@ void Player::draw(sf::RenderWindow& window) {
 sf::Vector2f Player::getPosition() {
     return playerSprite.getPosition();
 }
+
 void Player::handleInput() {
 
 }
@@ -96,4 +97,30 @@ void Player::updateAnimation(float dt) {
         //    playerSprite.setScale(3, 3);
         //}
     }
+}
+
+sf::Vector2f Player::getFacingDirection()
+{
+    sf::Vector2f direction;
+
+    switch (currentDirection)
+    {
+    case 0: // Down
+        direction = sf::Vector2f(0, 1);
+        break;
+    case 1: // Up
+        direction = sf::Vector2f(0, -1);
+        break;
+    case 2: // Right
+        direction = sf::Vector2f(1, 0);
+        break;
+    case 3: // Left
+        direction = sf::Vector2f(-1, 0);
+        break;
+    default:
+        direction = sf::Vector2f(0, 0);
+        break;
+    }
+
+    return direction;
 }

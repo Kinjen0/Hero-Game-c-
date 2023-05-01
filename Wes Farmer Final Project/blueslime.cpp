@@ -1,7 +1,7 @@
 #include "BlueSlime.h"
 #include <cmath>
 //change speed later to 100
-BlueSlime::BlueSlime(int x, int y) : Enemy(100, x, y, 50, 500, "Graphics/slime.png") {
+BlueSlime::BlueSlime(int x, int y) : Enemy(1, x, y, 50, 500, "Graphics/slime.png") {
     speed = 1.5;
     // Set the texture to the blue slime texture rectangle
     enemySprite.setTextureRect(sf::IntRect(8, 12, 16, 12));
