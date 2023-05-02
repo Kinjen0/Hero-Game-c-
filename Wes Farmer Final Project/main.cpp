@@ -50,6 +50,8 @@ sf::RectangleShape blackRectangle(sf::Vector2f(viewWidth, viewHeight));
 
 //text for the trees health
 sf::Text treeHealthText;
+//second tree health text
+sf::Text tree2HealthText;
 
 // vector to store the players current position
 sf::Vector2f playerPosition;
@@ -60,6 +62,17 @@ sf::Vector2f playerDirection;
 // Variables to manage the attack cooldowns
 bool canAttack = true;
 sf::Clock attackClock;
+
+// Integer to store the score
+sf::Text scoreText;
+
+sf::Text timerText;
+
+sf::Clock timerClock;
+
+// integer to store the current level
+
+
 
 
 
@@ -75,6 +88,7 @@ sf::Sprite wallSprite;
 // Initialize the player with starting position and texture file and speed
 Player player(50, 50, "Graphics/player.png", 250.f);
 Tree tree(100, viewWidth / 2 - 72, viewHeight / 2 - 96);
+Tree tree2(100, 0, 0);
 
 //code for the second tree to be added
 // 
@@ -121,6 +135,17 @@ void init()
 
 	//set the tree health
 	treeHealthText.setFont(font);
+	//set up the second tree text
+	tree2HealthText.setFont(font);
+
+	scoreText.setFont(font);
+	scoreText.setString("");
+
+	//set up the timer text
+	timerText.setFont(font);
+
+	//set the level as one
+	//level = 1;
 
 
 
@@ -149,11 +174,12 @@ void drawMap()
 		}
 	}
 }
-void update(float dt, const sf::Vector2f& treePos)
+void update(float dt)
 {
-	player.update(dt); // Update player
+		player.update(dt); // Update player
 		player.draw(window); // Draw player
 		tree.drawTree(window);
+
 
 		//display the trees health above it
 		treeHealthText.setString("Tree Health: " + std::to_string(tree.getHealth()));
@@ -161,23 +187,36 @@ void update(float dt, const sf::Vector2f& treePos)
 		float treeHealthTextWidth = treeHealthText.getLocalBounds().width;
 		treeHealthText.setPosition(tree.getPosition().x - (treeHealthTextWidth / 6), tree.getPosition().y - 50);
 		window.draw(treeHealthText);
+		
+		//manage the second tree health text
+		tree2HealthText.setString("Tree Health: " + std::to_string(tree2.getHealth()));
+		float tree2HealthTextWidth = tree2HealthText.getLocalBounds().width;
+		tree2HealthText.setPosition(tree2.getPosition().x - (tree2HealthTextWidth / 6), tree2.getPosition().y - 50);
+		window.draw(tree2HealthText);
+		
+		// Update the timerText with the time since the game started
+		timerText.setString("Time: " + std::to_string((int)timerClock.getElapsedTime().asSeconds()));
+
+
+
 
 
 }
 
-void spawnRandomEnemy(vector<unique_ptr<Enemy>>& enemies, const sf::Vector2f& treePos) {
+void spawnRandomEnemy(vector<unique_ptr<Enemy>>& enemies, const sf::Vector2f& treePos) 
+{
 	int corner = rand() % 2;
 	int x, y;
 
 	if (corner == 0) {
 		// Top left corner
-		x = 0 - 100;
-		y = 0 - 100;
+		x = 50;
+		y = 50;
 	}
 	else {
 		// Bottom right corner
-		x = viewWidth;
-		y = viewHeight;
+		x = viewWidth-100;
+		y = viewHeight-100;
 	}
 
 	int enemyType = rand() % 2;
@@ -209,11 +248,14 @@ int main() {
 	//potental vector to allow for multiple trees
 	//vector<unique_ptr<Tree>> trees;
 
-	//variable to store the location of the tree
-	sf::Vector2f treePos = tree.getPosition();
+	//variable to store the location of the trees
+	sf::Vector2f tree1Pos = tree.getPosition();
+	sf::Vector2f tree2Pos = tree2.getPosition();
 
 	// Variable to manage game over if the tree drops to or below 0 hp
 	bool gameOver = false;
+	int level = 1;
+
 
 
 
@@ -273,7 +315,7 @@ int main() {
 				// Spawn enemies every few seconds using a clock variable
 				static sf::Clock spawnClock;
 				if (spawnClock.getElapsedTime().asSeconds() >= 2.0f) {
-					spawnRandomEnemy(enemies, treePos);
+					spawnRandomEnemy(enemies, tree1Pos);
 					spawnClock.restart();
 				}
 
@@ -282,35 +324,79 @@ int main() {
 				drawMap();
 
 				//call the update function
-				update(dt, treePos);
+				update(dt);
 
+				//draw the timer
+				window.draw(timerText);
+
+				//create a change for the level
+				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 5.0f) 
+				{
+					level = 2;
+					timerClock.restart();
+					tree.resetHealth();
+					tree2.resetHealth();
+
+					enemies.clear();
+					attacks.clear();
+				}
+				//make the changes as required for the second level
+				if (level == 2)
+				{
+					// set the first tree to the left bottom corner
+					tree.setPosition(100, viewHeight - 150 - 72);
+					// set the second tree to the right top corner
+					tree2.setPosition(viewWidth - 100 - 96, 100);
+					//get the updated positions
+					tree1Pos = tree.getPosition();
+					tree2Pos = tree2.getPosition();
+				}
 				// Update and draw enemies
 				for (auto& enemy : enemies) {
-					enemy->update(dt, treePos);
+					if (level == 2) {
+						enemy->update(dt, tree1Pos, tree2Pos);
+					}
+					else {
+						enemy->update(dt, tree1Pos);
+					}
 					enemy->drawEnemy(window);
 				}
-
-				// Check collisions between enemies and trees
-	//for(auto enemyCount = enemies.begin(); enemyCount != enemies.end();)
+//enemy section
+		// Check collisions between enemies and trees
 				for (auto enemyIterator = enemies.begin(); enemyIterator != enemies.end();) {
 					bool enemyDestroyed = false;
-
+					//check colision with the first tree
 					if (tree.treeSprite.getGlobalBounds().intersects((*enemyIterator)->getGlobalBounds())) {
 						tree.takeDamage((*enemyIterator)->getDamage());
 
 						if (tree.getHealth() <= 0) {
-							//insert code for the game over
 							// if the tree drops below 0 hp then set the gameOver bool to true
 							gameOver = true;
 							
 							//call update one last time
-							update(dt, treePos);
+							update(dt);
 							
 						}
 
 						enemyDestroyed = true;
 					}
 
+					// Check Colision with the second tree
+					if (tree2.treeSprite.getGlobalBounds().intersects((*enemyIterator)->getGlobalBounds())) {
+						tree2.takeDamage((*enemyIterator)->getDamage());
+
+						if (tree2.getHealth() <= 0) {
+							// if the tree drops below 0 hp then set the gameOver bool to true
+							gameOver = true;
+							
+							//call update one last time
+							update(dt);
+							
+						}
+
+						enemyDestroyed = true;
+					}
+					
 
 					if (enemyDestroyed) {
 						enemyIterator = enemies.erase(enemyIterator); // Remove the enemy
@@ -345,6 +431,12 @@ int main() {
 					attack->update(dt);
 					attack->draw(window);
 				}
+				
+						//create the second tree if the level is 2
+		if (level == 2)
+		{
+			tree2.drawTree(window);
+		}
 
 
 
@@ -372,15 +464,14 @@ int main() {
 							++enemyIterator;
 						}
 					}
-
 					if (attackHit) {
 						attackIterator = attacks.erase(attackIterator);
 					}
 					else {
 						++attackIterator;
 					}
-				}
 
+				}
 
 
 

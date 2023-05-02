@@ -11,7 +11,7 @@ Attack::Attack(float x, float y, float speed, const sf::Vector2f& direction, con
 	attackTexture.loadFromFile(attackTexturePng);
 	attackSprite.setTexture(attackTexture);
 	attackSprite.setPosition(x, y);
-	attackSprite.setScale(5, 5);
+	attackSprite.setScale(2,2);
 	
 }
 void Attack::update(float dt)

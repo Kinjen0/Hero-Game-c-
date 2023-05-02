@@ -9,6 +9,8 @@ public:
 	void setPosition(int x, int y);
 	sf::Vector2f getPosition();
 	int getHealth();
+	void resetHealth();
+
 	sf::Texture treeTexture;
 	sf::Sprite treeSprite;
 private:

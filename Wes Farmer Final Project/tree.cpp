@@ -30,3 +30,7 @@ int Tree::getHealth()
 {
 	return treeHealth;
 }
+void Tree::resetHealth()
+{
+	treeHealth = 100;
+}

@@ -10,6 +10,7 @@ Enemy::Enemy(int health, int x, int y, int damage, float speed, const std::strin
     enemySprite.setTexture(enemyTexture);
     enemySprite.setPosition(x, y);
     enemySprite.setScale(1, 1);
+    target = -1;
 }
 
 void Enemy::decreaseHealth(int damage) {
@@ -38,6 +39,32 @@ void Enemy::update(float dt, const sf::Vector2f& treePos){
     //y += direction.y * speed;
     enemySprite.move(direction * speed * dt);
     //setPosition(x, y);
+}
+//overloaded enemy update
+void Enemy::update(float dt, const sf::Vector2f& tree1Pos, const sf::Vector2f& tree2Pos)
+{
+    sf::Vector2f targetTreePos;
+
+    if (target == -1)
+    {
+        target = rand() % 2;
+    }
+    if (target == 1)
+    {
+		targetTreePos = tree1Pos;
+	}
+    else
+    {
+		targetTreePos = tree2Pos;
+	}
+
+    // Calculate the movement direction
+    sf::Vector2f movementDirection = targetTreePos - enemySprite.getPosition();
+    float length = std::sqrt(std::pow(movementDirection.x, 2) + std::pow(movementDirection.y, 2));
+    movementDirection /= length;
+
+    // Move the enemy towards the tree
+    enemySprite.move(movementDirection * speed * dt);
 }
 int Enemy::getDamage() {
 	return damage;

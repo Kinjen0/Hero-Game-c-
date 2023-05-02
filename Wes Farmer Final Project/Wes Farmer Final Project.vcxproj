@@ -142,6 +142,7 @@
     <ClCompile Include="tree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="questions.txt" />
     <Text Include="SourcesOfSprites.txt" />
   </ItemGroup>
   <ItemGroup>

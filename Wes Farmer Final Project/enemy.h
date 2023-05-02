@@ -8,6 +8,7 @@ public:
 	void drawEnemy(sf::RenderWindow& window);
 	void setPosition(int x, int y);
 	void update(float dt,const sf::Vector2f& treePos);
+	void update(float dt, const sf::Vector2f& tree1Pos, const sf::Vector2f& tree2Pos);
 	int getDamage();
 	void takeDamage();
 	int getHealth();
@@ -20,6 +21,7 @@ public:
 	int y;
 	int damage;
 	float speed;
+	int target;
 
 
 };

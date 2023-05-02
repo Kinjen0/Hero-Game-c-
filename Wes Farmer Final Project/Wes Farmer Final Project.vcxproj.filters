@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="SourcesOfSprites.txt" />
+    <Text Include="questions.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="player.h">
