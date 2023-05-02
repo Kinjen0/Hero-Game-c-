@@ -88,7 +88,8 @@ sf::Sprite wallSprite;
 // Initialize the player with starting position and texture file and speed
 Player player(50, 50, "Graphics/player.png", 250.f);
 Tree tree(100, viewWidth / 2 - 72, viewHeight / 2 - 96);
-Tree tree2(100, 0, 0);
+//set the tree off in narnia because its hitbox is still there
+Tree tree2(100, 10000, 0);
 
 //code for the second tree to be added
 // 
@@ -314,7 +315,7 @@ int main() {
 			{
 				// Spawn enemies every few seconds using a clock variable
 				static sf::Clock spawnClock;
-				if (spawnClock.getElapsedTime().asSeconds() >= 2.0f) {
+				if (spawnClock.getElapsedTime().asSeconds() >= 1.0f) {
 					spawnRandomEnemy(enemies, tree1Pos);
 					spawnClock.restart();
 				}
@@ -330,7 +331,7 @@ int main() {
 				window.draw(timerText);
 
 				//create a change for the level
-				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 5.0f) 
+				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 60.0f) 
 				{
 					level = 2;
 					timerClock.restart();
@@ -408,7 +409,7 @@ int main() {
 
 //attack section
 // 				//manage attack cooldown
-				float attackCooldown = 0.2f; // cooldown time using seconds
+				float attackCooldown = 0.5f; // cooldown time using seconds
 				if (!canAttack && attackClock.getElapsedTime().asSeconds() >= attackCooldown)
 				{
 					canAttack = true;
