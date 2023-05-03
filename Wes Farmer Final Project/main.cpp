@@ -6,6 +6,8 @@
 //https://totuslotus.itch.io/characterpack
 * the slime spritesheets came from
 * https://game-endeavor.itch.io/mystic-woods
+* I got the code for the random number setter from
+* https://stackoverflow.com/questions/11943525/seeding-a-random-number-generator-c
 
 * 
 * 
@@ -204,7 +206,7 @@ void update(float dt)
 
 }
 
-void spawnRandomEnemy(vector<unique_ptr<Enemy>>& enemies, const sf::Vector2f& treePos) 
+void spawnRandomEnemy(vector<unique_ptr<Enemy>>& enemies, const sf::Vector2f& treePos, int level) 
 {
 	int corner = rand() % 2;
 	int x, y;
@@ -219,14 +221,21 @@ void spawnRandomEnemy(vector<unique_ptr<Enemy>>& enemies, const sf::Vector2f& tr
 		x = viewWidth-100;
 		y = viewHeight-100;
 	}
+	// if the level is 2 spawn both types of enemies at random. else only spawn the blue enemies
+	if (level == 2)
+	{
+		int enemyType = rand() % 2;
 
-	int enemyType = rand() % 2;
-
-	if (enemyType == 0) {
-		enemies.push_back(make_unique<BlueSlime>(x, y));
+		if (enemyType == 0) {
+			enemies.push_back(make_unique<BlueSlime>(x, y));
+		}
+		else {
+			enemies.push_back(make_unique<RedSlime>(x, y));
+		}
 	}
-	else {
-		enemies.push_back(make_unique<RedSlime>(x, y));
+	else
+	{
+		enemies.push_back(make_unique<BlueSlime>(x, y));
 	}
 }
 
@@ -248,6 +257,9 @@ int main() {
 	vector<unique_ptr<Attack>> attacks;
 	//potental vector to allow for multiple trees
 	//vector<unique_ptr<Tree>> trees;
+
+	//set the random seed so its accually random
+	srand(time(NULL));
 
 	//variable to store the location of the trees
 	sf::Vector2f tree1Pos = tree.getPosition();
@@ -316,7 +328,7 @@ int main() {
 				// Spawn enemies every few seconds using a clock variable
 				static sf::Clock spawnClock;
 				if (spawnClock.getElapsedTime().asSeconds() >= 1.0f) {
-					spawnRandomEnemy(enemies, tree1Pos);
+					spawnRandomEnemy(enemies, tree1Pos, level);
 					spawnClock.restart();
 				}
 
