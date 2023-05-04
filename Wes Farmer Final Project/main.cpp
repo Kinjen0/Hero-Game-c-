@@ -61,20 +61,15 @@ sf::Vector2f playerPosition;
 //store the players current direction
 sf::Vector2f playerDirection;
 
-// Variables to manage the attack cooldowns
+// Variables to manage the different clocks and timers I use
 bool canAttack = true;
 sf::Clock attackClock;
-
-// Integer to store the score
-sf::Text scoreText;
-
 sf::Text timerText;
-
 sf::Clock timerClock;
 
-// integer to store the current level
-
-
+// Text for the players score
+sf::Text scoreText;
+int score;
 
 
 
@@ -141,8 +136,11 @@ void init()
 	//set up the second tree text
 	tree2HealthText.setFont(font);
 
+
+	// Variables to manage the players Score
+	//score = 0;
 	scoreText.setFont(font);
-	scoreText.setString("");
+	scoreText.setPosition(viewWidth - 200, 50);
 
 	//set up the timer text
 	timerText.setFont(font);
@@ -199,6 +197,10 @@ void update(float dt)
 		
 		// Update the timerText with the time since the game started
 		timerText.setString("Time: " + std::to_string((int)timerClock.getElapsedTime().asSeconds()));
+
+		
+
+		
 
 
 
@@ -258,7 +260,7 @@ int main() {
 	//potental vector to allow for multiple trees
 	//vector<unique_ptr<Tree>> trees;
 
-	//set the random seed so its accually random
+	//set the random seed so its actually random
 	srand(time(NULL));
 
 	//variable to store the location of the trees
@@ -270,6 +272,8 @@ int main() {
 	int level = 1;
 
 
+	//clock to manage the score
+	sf::Clock scoreClock;
 
 
 	sf::Clock clock;
@@ -288,7 +292,8 @@ int main() {
 		{
 			//create the text for the game over
 			sf::Text gameOverText;
-			gameOverText.setScale(5, 5);
+			gameOverText.setCharacterSize(250);
+			//gameOverText.setScale(5, 5);
 			gameOverText.setFont(font);
 			gameOverText.setString("Game Over");
 			gameOverText.setFillColor(sf::Color::Red);
@@ -333,11 +338,20 @@ int main() {
 				}
 
 				window.clear(sf::Color::Red);
-				//call the funciton to draw the map
+				//call the function to draw the map
 				drawMap();
 
 				//call the update function
 				update(dt);
+		//score
+				if (scoreClock.getElapsedTime().asSeconds() > 1)
+				{
+					score++;
+					scoreClock.restart();
+				}
+				scoreText.setString("Score: " + std::to_string(score));
+				window.draw(scoreText);
+
 
 				//draw the timer
 				window.draw(timerText);
@@ -466,7 +480,6 @@ int main() {
 							if ((*enemyIterator)->getHealth() <= 0) {
 								enemyDestroyed = true;
 							}
-
 							attackHit = true;
 						}
 
@@ -501,7 +514,8 @@ int main() {
 				//show the rectangle 
 				textRect = pauseText.getLocalBounds();
 				window.draw(blackRectangle);
-				pauseText.setScale(5, 5);
+				pauseText.setCharacterSize(250);
+				//pauseText.setScale(5, 5);
 
 				pauseText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 				pauseText.setPosition(sf::Vector2f(viewWidth / 2.0f, viewHeight / 2.0f));
