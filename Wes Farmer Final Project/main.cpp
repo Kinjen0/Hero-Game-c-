@@ -151,6 +151,41 @@ void init()
 
 
 }
+
+//title screen function
+void titleScreen()
+{
+	sf::Text titleText1;
+	sf::Text titleText2;
+	sf::Text titleText3;
+	bool endTitle = false;
+	//set the title text to the directions for the game
+	titleText1.setFont(font);
+	titleText1.setString("Welcome to the Protectors of the great tree");
+	titleText1.setPosition(viewWidth / 2 - 300, viewHeight / 2 - 200);
+	titleText2.setFont(font);
+	titleText2.setString("Use the W, A, S, D to move and the space bar to attack");
+	titleText2.setPosition(viewWidth / 2 - 300, viewHeight / 2 - 100);
+	titleText3.setFont(font);
+	titleText3.setString("Press enter to start");
+	titleText3.setPosition(viewWidth / 2 - 300, viewHeight / 2);
+	//while the title screen is up
+	while (!endTitle)
+	{
+		//draw the title text
+		window.draw(titleText1);
+		window.draw(titleText2);
+		window.draw(titleText3);
+		window.display();
+		//if the enter key is pressed
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		{
+			//end the title screen
+			endTitle = true;
+		}
+	}
+
+}
 // Function to create the tilemap
 void drawMap()
 {
@@ -246,7 +281,7 @@ void createAttack(std::vector<unique_ptr<Attack>>& attacks, sf::Vector2f playerP
 	float attackSpeed = 1000.f;
 
 	// Create a new attack
-	Attack newAttack(playerPosition.x, playerPosition.y, attackSpeed, playerDirection, "Graphics/attack.png");
+	//Attack newAttack(playerPosition.x, playerPosition.y, attackSpeed, playerDirection, "Graphics/attack.png");
 	attacks.push_back(make_unique<Attack>(playerPosition.x, playerPosition.y, attackSpeed, playerDirection, "Graphics/attack.png"));
 }
 
@@ -274,6 +309,9 @@ int main() {
 
 	//clock to manage the score
 	sf::Clock scoreClock;
+	init();
+	titleScreen();
+
 
 
 	sf::Clock clock;
@@ -285,7 +323,6 @@ int main() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		init();
 
 		//if statement to display the game over window if the game is lost
 		if (gameOver)
