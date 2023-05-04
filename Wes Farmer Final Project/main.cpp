@@ -140,7 +140,7 @@ void init()
 	// Variables to manage the players Score
 	//score = 0;
 	scoreText.setFont(font);
-	scoreText.setPosition(viewWidth - 200, 50);
+	scoreText.setPosition(viewWidth / 2 + 200, 25);
 
 	//set up the timer text
 	timerText.setFont(font);
