@@ -162,6 +162,13 @@ void init()
 
 
 }
+//reset the timer clock 
+void resetTimer()
+{
+	timerClock.restart();
+	//and reset score
+	score = 0;
+}
 
 //title screen function
 void titleScreen()
@@ -188,6 +195,9 @@ void titleScreen()
 		window.draw(titleText2);
 		window.draw(titleText3);
 		window.display();
+		// Reset the timer so that it dosent count the time the title screen is up
+		resetTimer();
+
 		//if the enter key is pressed
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 		{
@@ -328,7 +338,7 @@ int main() {
 	sf::Clock scoreClock;
 	init();
 	titleScreen();
-
+	resetTimer();
 
 
 	sf::Clock clock;
@@ -411,7 +421,7 @@ int main() {
 				window.draw(timerText);
 
 				//create a change for the level
-				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 3.0f) 
+				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 30.0f) 
 				{
 					level = 2;
 					timerClock.restart();
