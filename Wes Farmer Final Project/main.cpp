@@ -78,6 +78,9 @@ sf::Clock timerClock;
 sf::Text scoreText;
 int score;
 
+//healing cooldown
+sf::Clock healClock;
+bool canHeal = true;
 
 
 
@@ -169,7 +172,18 @@ void resetTimer()
 	//and reset score
 	score = 0;
 }
+void healTree(sf::Vector2f playerPos)
+{
+	tree.getPosition();
+	tree2.getPosition();
+	if (score < 0)
+	{
+		//find the closest tree to the player
+		score -= 0;
+		canHeal = false;
 
+	}
+}
 //title screen function
 void titleScreen()
 {
@@ -413,15 +427,16 @@ int main() {
 					score++;
 					scoreClock.restart();
 				}
+				// Modify and draw the score text
 				scoreText.setString("Score: " + std::to_string(score));
 				window.draw(scoreText);
 
 
 				//draw the timer
 				window.draw(timerText);
-
+//LEVELS
 				//create a change for the level
-				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 30.0f) 
+				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 3.0f) 
 				{
 					level = 2;
 					timerClock.restart();
@@ -442,6 +457,20 @@ int main() {
 					tree1Pos = tree.getPosition();
 					tree2Pos = tree2.getPosition();
 				}
+//TREE HEALING
+				//check if the timer for healing has ran out
+				if (healClock.getElapsedTime().asSeconds() >= 5.0f)
+				{
+					//reset the timer
+					healClock.restart();
+					canHeal = true;
+				}
+				// If the player presses E once, heal the closest tree
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && score >= 3 && canHeal == true) {
+					tree.healTree();
+				}
+
+//Update and draw Enemies
 				// Update and draw enemies
 				for (auto& enemy : enemies) {
 					if (level == 2) {

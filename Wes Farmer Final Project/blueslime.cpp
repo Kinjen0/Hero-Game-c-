@@ -1,4 +1,4 @@
-#include "BlueSlime.h"
+#include "blueslime.h"
 #include <cmath>
 //change speed later to 100
 BlueSlime::BlueSlime(int x, int y) : Enemy(1, x, y, 5, 200, "Graphics/slime.png") {

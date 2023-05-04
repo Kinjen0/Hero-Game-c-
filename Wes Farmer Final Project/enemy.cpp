@@ -1,4 +1,5 @@
-#include "Enemy.h"
+#include "enemy.h"
+#include <math.h>"
 
 Enemy::Enemy(int health, int x, int y, int damage, float speed, const std::string& textureFile) {
     this->health = health;

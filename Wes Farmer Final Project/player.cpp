@@ -1,6 +1,6 @@
 //Player spritesheet came from
 //https://totuslotus.itch.io/characterpack
-#include "Player.h"
+#include "player.h"
 
 Player::Player(float startX, float startY, const std::string& textureFile, int playerSpeed) {
     playerTexture.loadFromFile(textureFile);

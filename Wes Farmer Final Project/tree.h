@@ -10,6 +10,7 @@ public:
 	sf::Vector2f getPosition();
 	int getHealth();
 	void resetHealth();
+	void healTree();
 
 	sf::Texture treeTexture;
 	sf::Sprite treeSprite;

@@ -34,3 +34,7 @@ void Tree::resetHealth()
 {
 	treeHealth = 100;
 }
+void Tree::healTree()
+{
+	treeHealth += 10;
+}
