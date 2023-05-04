@@ -28,8 +28,15 @@
 using namespace std;	
 
 //view size
-int viewWidth = 1920;
-int viewHeight = 1080;
+int baseWidth = 2560;
+int baseHeight = 1440;
+
+//trying to get the view working
+int viewWidth = sf::VideoMode::getDesktopMode().width;
+int viewHeight = sf::VideoMode::getDesktopMode().height;
+//set the view to the desktop size
+sf::View view(sf::FloatRect(0, 0, viewWidth, viewHeight));
+
 
 
 
@@ -75,7 +82,9 @@ int score;
 
 
 //render window
-sf::RenderWindow window(sf::VideoMode(viewWidth, viewHeight), "SFML works!");
+sf::RenderWindow window(sf::VideoMode(baseWidth, baseHeight), "SFML works!");
+
+
 sf::Texture grassTexture;
 sf::Sprite grassSprite;
 sf::Texture wallTexture;
@@ -83,7 +92,7 @@ sf::Sprite wallSprite;
 
 
 // Initialize the player with starting position and texture file and speed
-Player player(50, 50, "Graphics/player.png", 250.f);
+Player player(viewWidth / 2, viewHeight / 2, "Graphics/player.png", 400.f);
 Tree tree(100, viewWidth / 2 - 72, viewHeight / 2 - 96);
 //set the tree off in narnia because its hitbox is still there
 Tree tree2(100, 10000, 0);
@@ -113,6 +122,8 @@ int mapArray[15][15] = {
 // Initializing function
 void init()
 {
+	//set the view to the window
+
 	//load the 16 x 16 grass texture
 	grassTexture.loadFromFile("Graphics/grass.png");
 	grassSprite.setTexture(grassTexture);
@@ -287,6 +298,10 @@ void createAttack(std::vector<unique_ptr<Attack>>& attacks, sf::Vector2f playerP
 
 
 int main() {
+
+	window.setView(view);
+
+
 	//vector to store enemies
 	vector<unique_ptr<Enemy>> enemies;
 	
@@ -306,10 +321,13 @@ int main() {
 	bool gameOver = false;
 	int level = 1;
 
+	window.create(sf::VideoMode(viewWidth, viewHeight), "bacon");
+
 
 	//clock to manage the score
 	sf::Clock scoreClock;
 	init();
+	titleScreen();
 
 
 
