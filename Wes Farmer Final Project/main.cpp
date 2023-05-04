@@ -310,7 +310,6 @@ int main() {
 	//clock to manage the score
 	sf::Clock scoreClock;
 	init();
-	titleScreen();
 
 
 
