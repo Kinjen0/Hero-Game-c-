@@ -28,14 +28,14 @@
 using namespace std;	
 
 //view size
-int baseWidth = 2560;
-int baseHeight = 1440;
+int viewWidth = 2560;
+int viewHeight = 1440;
 
 //trying to get the view working
-int viewWidth = sf::VideoMode::getDesktopMode().width;
-int viewHeight = sf::VideoMode::getDesktopMode().height;
+//int viewWidth = sf::VideoMode::getDesktopMode().width;
+//int viewHeight = sf::VideoMode::getDesktopMode().height;
 //set the view to the desktop size
-sf::View view(sf::FloatRect(0, 0, viewWidth, viewHeight));
+//sf::View view(sf::FloatRect(0, 0, viewWidth, viewHeight));
 
 
 
@@ -82,7 +82,7 @@ int score;
 
 
 //render window
-sf::RenderWindow window(sf::VideoMode(baseWidth, baseHeight), "SFML works!");
+sf::RenderWindow window(sf::VideoMode(viewWidth, viewHeight), "SFML works!");
 
 
 sf::Texture grassTexture;
@@ -299,7 +299,7 @@ void createAttack(std::vector<unique_ptr<Attack>>& attacks, sf::Vector2f playerP
 
 int main() {
 
-	window.setView(view);
+	//window.setView(view);
 
 
 	//vector to store enemies
@@ -321,7 +321,7 @@ int main() {
 	bool gameOver = false;
 	int level = 1;
 
-	window.create(sf::VideoMode(viewWidth, viewHeight), "bacon");
+	//window.create(sf::VideoMode(viewWidth, viewHeight), "bacon");
 
 
 	//clock to manage the score
@@ -411,7 +411,7 @@ int main() {
 				window.draw(timerText);
 
 				//create a change for the level
-				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 60.0f) 
+				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 3.0f) 
 				{
 					level = 2;
 					timerClock.restart();
