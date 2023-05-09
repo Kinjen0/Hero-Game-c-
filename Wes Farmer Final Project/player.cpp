@@ -15,9 +15,10 @@ Player::Player(float startX, float startY, const std::string& textureFile, int p
     currentFrame = 0;
     currentDirection = 0;
     frameTime = 0;
-    timePerFrame = 0.1f; // Time per frame in seconds, adjust for desired animation speed
-    frameWidth = 16; // Width of a single frame in the texture
-    frameHeight = 16; // Height of a single frame in the texture
+    // Time between the frames of the animation
+    timePerFrame = 0.1f; 
+    frameWidth = 16; 
+    frameHeight = 16; 
 
     rows = 4;
     columns = 4;
@@ -58,18 +59,15 @@ void Player::update(float dt) {
 
     updateAnimation(dt);
 }
-
+// Function to draw the player on to the screen
 void Player::draw(sf::RenderWindow& window) {
     window.draw(playerSprite);
 }
-
+// Return the players current position
 sf::Vector2f Player::getPosition() {
     return playerSprite.getPosition();
 }
-
-void Player::handleInput() {
-
-}
+// Update the players animation
 void Player::updateAnimation(float dt) {
     frameTime += dt;
 
@@ -77,12 +75,12 @@ void Player::updateAnimation(float dt) {
         frameTime = 0;
         currentFrame++;
 
-        // Assuming each direction has 2 frames of animation, change this value if needed
+        // IF the current frame is greater than 3 reset it to frame zero
         if (currentFrame >= 3) {
             currentFrame = 0;
         }
 
-        // Calculate the x and y coordinates of the current frame in the texture
+        // figure out the x and y cordinants of the current frame
         int x = currentDirection * frameWidth;
         int y = currentFrame * frameHeight;
         
@@ -90,15 +88,9 @@ void Player::updateAnimation(float dt) {
         // Update the texture rect to display the current frame
         playerSprite.setTextureRect(sf::IntRect(x, y, frameWidth, frameHeight));
 
-        //if (currentDirection == 1) { // Flip the sprite if the direction is left
-        //    playerSprite.setScale(3, 3);
-        //}
-        //else {
-        //    playerSprite.setScale(3, 3);
-        //}
     }
 }
-
+// Return the direction the player is currently facing
 sf::Vector2f Player::getFacingDirection()
 {
     sf::Vector2f direction;

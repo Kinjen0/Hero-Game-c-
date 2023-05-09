@@ -10,7 +10,7 @@ PATH1 = -I /usr/local/SFML-2.5.1/include
 # Point the compiler to the directory with all of the libraries for sfml
 SFMLFLAGS = -L /usr/local/2.5.1_2/lib/ -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
-
+# run everything required to build the program
 all:main
 
 # Create the main program. And point it to each of the object files created from the later sections
@@ -46,7 +46,7 @@ tree.o: tree.cpp tree.h
 # Run the command
 run:main.o
 	./main
-
+# Clean up the files created by the compiler
 clean:
 	rm main attack.o blueslime.o redslime.o enemy.o player.o tree.o
 
