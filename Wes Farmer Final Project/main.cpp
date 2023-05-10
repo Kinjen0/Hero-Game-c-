@@ -154,10 +154,13 @@ void init()
 	
 	// Set up the score text
 	scoreText.setFont(font);
-	scoreText.setPosition(viewWidth / 2 + 200, 25);
+	scoreText.setPosition(viewWidth - 200, 25);
+	scoreText.setCharacterSize(50);
 
 	// Set up the timer text
 	timerText.setFont(font);
+	timerText.setPosition(25, 25);
+	timerText.setCharacterSize(50);
 }
 // Function to reset the timer and score
 void resetTimer()
@@ -175,16 +178,16 @@ void titleScreen()
 	bool endTitle = false;
 	// Set up the title text to the directions for the game
 	titleText1.setFont(font);
-	titleText1.setString("Welcome to the Protectors of the great tree");
-	titleText1.setPosition(viewWidth / 2 - 300, viewHeight / 2 - 200);
+	titleText1.setString("Welcome to the Protectors of the great tree\nYour goal is to protect the tree from the evil slimes for as long as you can. \nAfter 45 seconds you shall begin level 2");
+	titleText1.setPosition(viewWidth / 2 - 300, viewHeight / 2 - 300);
 	// Set up the second title text
 	titleText2.setFont(font);
-	titleText2.setString("Use the W, A, S, D to move and the space bar to attack");
+	titleText2.setString("Use the W, A, S, D to move \nSpace bar to attack\n And E to spend 30 points to heal the trees, This can only be done every 30 seconds.");
 	titleText2.setPosition(viewWidth / 2 - 300, viewHeight / 2 - 100);
 	// Set up the third title text
 	titleText3.setFont(font);
 	titleText3.setString("Press enter to start");
-	titleText3.setPosition(viewWidth / 2 - 300, viewHeight / 2);
+	titleText3.setPosition(viewWidth / 2 - 300, viewHeight / 2 + 100);
 	// While the title screen is up
 	while (!endTitle)
 	{
@@ -404,7 +407,7 @@ int main() {
 			{
 				// Spawn enemies every few seconds using a clock variable
 				static sf::Clock spawnClock;
-				if (spawnClock.getElapsedTime().asSeconds() >= 1.0f) {
+				if (spawnClock.getElapsedTime().asSeconds() >= 1.5f) {
 					spawnEnemy(enemies, tree1Pos, level);
 					spawnClock.restart();
 				}
@@ -428,21 +431,22 @@ int main() {
 
 
 // Manage tree healing
-				if (healClock.getElapsedTime().asSeconds() >= 3)
+				if (healClock.getElapsedTime().asSeconds() >= 30)
 				{
 					canHeal = true;
 					healClock.restart();
 				}
+				// If the E button is pressed
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 				{
-					if (canHeal)
+					// And if canHeal is true and the score is greater than 30
+					if (canHeal && score >=30)
 					{
-						canHeal = false;
-						if (score >= 1)
-						{
+
+							canHeal = false;
 							healTrees(tree1Pos, tree2Pos, playerPosition);
-							score -= 1;
-						}
+							score -= 30;
+						
 					}
 				}
 
@@ -466,7 +470,7 @@ int main() {
 
 //LEVELS
 				// If statement to check if the timer has reached a given time and to change the level
-				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 3.0f) 
+				if (level == 1 && timerClock.getElapsedTime().asSeconds() >= 45.0f) 
 				{
 					level = 2;
 					// Reset the trees health
@@ -571,17 +575,20 @@ int main() {
 
 				
 				// Update and draw attacks
+	// Vector 2f to store attack positions
+				sf::Vector2f attackPosition;
 				for (auto& attack : attacks)
 				{
 					attack->update(dt);
 					attack->draw(window);
+
 				}
 
 
 
 
 				// manage player attack and its collision with enemies
-				// Itterate through the attacks vector
+				// Iterate through the attacks vector
 				for (auto attackIterator = attacks.begin(); attackIterator != attacks.end();) {
 					bool attackHit = false;
 			
@@ -604,6 +611,12 @@ int main() {
 						else {
 							++enemyIterator;
 						}
+					}
+					// Check if the attack is out of bounds and delete it
+					attackPosition = (*attackIterator)->getPosition();
+					if (attackPosition.x >= viewWidth || attackPosition.y >= viewHeight || attackPosition.x <= 0 || attackPosition.y <= 0)
+					{
+						attackHit = true;
 					}
 					// If the attack has hit an enemy then remove it from the vector
 					if (attackHit) {

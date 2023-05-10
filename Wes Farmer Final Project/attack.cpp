@@ -26,3 +26,7 @@ void Attack::draw(sf::RenderWindow& window)
 {
 	window.draw(attackSprite);
 }
+sf::Vector2f Attack::getPosition()
+{
+	return attackSprite.getPosition();
+}
