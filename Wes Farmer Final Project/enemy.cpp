@@ -1,5 +1,5 @@
 #include "enemy.h"
-#include <math.h>"
+#include <math.h>
 // Default constructor for the enemy, taking in its health, position, damage, speed, and texture file
 Enemy::Enemy(int health, int x, int y, int damage, float speed, const std::string& textureFile) {
     this->health = health;

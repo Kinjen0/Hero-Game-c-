@@ -154,7 +154,7 @@ void init()
 	
 	// Set up the score text
 	scoreText.setFont(font);
-	scoreText.setPosition(viewWidth - 200, 25);
+	scoreText.setPosition(viewWidth / 2, 25);
 	scoreText.setCharacterSize(50);
 
 	// Set up the timer text
