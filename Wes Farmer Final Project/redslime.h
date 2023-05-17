@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "enemy.h"
 #include <SFML/Graphics.hpp>
 
 class RedSlime : public Enemy {
